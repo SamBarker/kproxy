@@ -51,7 +51,8 @@ public abstract class FilterHarness {
      */
     protected void buildChannel(KrpcFilter filter, long timeoutMs) {
         this.filter = filter;
-        filterHandler = new FilterHandler(getOnlyElement(FilterAndInvoker.build(filter)), timeoutMs, null, new VirtualCluster("TestVirtualCluster", null, null, Optional.empty(), false, false));
+        filterHandler = new FilterHandler(getOnlyElement(FilterAndInvoker.build(filter)), timeoutMs, null,
+                new VirtualCluster("TestVirtualCluster", null, null, Optional.empty(), false, false));
         channel = new EmbeddedChannel(filterHandler);
     }
 
