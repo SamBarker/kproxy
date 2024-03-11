@@ -160,9 +160,22 @@ jobs:
            server-username: SONATYPE_TOKEN_USERNAME # env variable for Sonatype username
            server-password: SONATYPE_TOKEN_PASSWORD # env variable for Sonatype password
            overwrite-settings: true
-       - uses: s4u/maven-settings-action@v3.0.0
+       - name: maven-settings-xml-action
+         uses: whelk-io/maven-settings-xml-action@v22
          with:
-           repositories: '{"id": "central-staging", "url": "https://s01.oss.sonatype.org/content/repositories/staging/", "snapshots": {"enabled": false}}, "releases": {"enabled": true}}'
+           repositories: |
+             [
+               {
+                 "id": "central-staging",
+                 "url": "https://s01.oss.sonatype.org/content/repositories/staging/",
+                 "snapshots": {
+                   "enabled": false
+                 },
+                 "releases": {
+                   "enabled": true
+                 }
+               }
+             ]
        - name: 'build sample against staged release'
-         run: "mvn clean verify -U -pl :kroxylicious-sample"
+         run: "mvn clean verify -U -P github -pl :kroxylicious-sample"
 
