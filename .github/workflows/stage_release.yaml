@@ -132,7 +132,7 @@ jobs:
           SONATYPE_TOKEN_PASSWORD: ${{ secrets.KROXYLICIOUS_SONATYPE_TOKEN_PASSWORD }}
         run: ./scripts/transition-staging-repository-state.sh -s close
   validate:
-    if: ${{ success() && "${{ inputs.dry-run }}" != true}}
+    if: ${{ success() && inputs.dry-run != true}}
     needs: stage_release
     runs-on: ubuntu-latest
 
