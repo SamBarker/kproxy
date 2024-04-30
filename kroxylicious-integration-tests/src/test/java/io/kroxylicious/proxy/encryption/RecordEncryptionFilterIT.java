@@ -261,8 +261,7 @@ class RecordEncryptionFilterIT {
         try (var tester = kroxyliciousTester(builder);
                 var producer = tester.producer()) {
 
-            var message = HELLO_WORLD;
-            producer.send(new ProducerRecord<>(topic.name(), message)).get(5, TimeUnit.SECONDS);
+            producer.send(new ProducerRecord<>(topic.name(), HELLO_WORLD)).get(5, TimeUnit.SECONDS);
 
             var tps = List.of(new TopicPartition(topic.name(), 0));
             directConsumer.assign(tps);
@@ -272,7 +271,33 @@ class RecordEncryptionFilterIT {
                     .toIterable()
                     .singleElement()
                     .extracting(ConsumerRecord::value)
-                    .isNotEqualTo(message);
+                    .isNotEqualTo(HELLO_WORLD);
+        }
+    }
+    @TestTemplate
+    void topicRecordKeysAreUnreadableOnServer(KafkaCluster cluster, Topic topic, KafkaConsumer<String, String> directConsumer, TestKmsFacade<?, ?, ?> testKmsFacade)
+            throws Exception {
+        var testKekManager = testKmsFacade.getTestKekManager();
+        testKekManager.generateKek(topic.name());
+
+        var builder = proxy(cluster);
+        builder.addToFilters(buildEncryptionFilterDefinition(testKmsFacade));
+
+        try (var tester = kroxyliciousTester(builder);
+                var producer = tester.producer()) {
+
+            final String messageKey = "recordKey";
+            producer.send(new ProducerRecord<>(topic.name(), messageKey, HELLO_WORLD)).get(5, TimeUnit.SECONDS);
+
+            var tps = List.of(new TopicPartition(topic.name(), 0));
+            directConsumer.assign(tps);
+            directConsumer.seekToBeginning(tps);
+            var records = directConsumer.poll(Duration.ofSeconds(2));
+            assertThat(records.iterator())
+                    .toIterable()
+                    .singleElement()
+                    .extracting(ConsumerRecord::key)
+                    .isNotEqualTo(messageKey);
         }
     }
 
