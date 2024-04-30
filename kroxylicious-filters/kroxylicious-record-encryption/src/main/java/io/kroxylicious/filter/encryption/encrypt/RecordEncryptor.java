@@ -112,7 +112,7 @@ public class RecordEncryptor<K, E> implements RecordTransform<Dek<E>.Encryptor> 
         final Header[] transformedHeaders;
         if (kafkaRecord.hasValue()) {
             Header[] oldHeaders = kafkaRecord.headers();
-            if (encryptionScheme.recordFields().contains(RecordField.RECORD_HEADER_VALUES) || oldHeaders.length == 0) {
+            if (encryptionScheme.targets(RecordField.RECORD_HEADER_VALUES) || oldHeaders.length == 0) {
                 transformedHeaders = encryptionHeader;
             }
             else {
