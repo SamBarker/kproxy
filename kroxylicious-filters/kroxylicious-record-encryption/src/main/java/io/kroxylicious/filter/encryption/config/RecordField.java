@@ -14,11 +14,11 @@ import java.util.Set;
  */
 public enum RecordField {
     RECORD_VALUE((byte) 1),
-    RECORD_HEADER_VALUES((byte) (1 << 1));
+    RECORD_HEADER_VALUES((byte) (1 << 1)),
+    RECORD_KEY((byte) (1 << 2));
 
     private final byte code;
 
-    // RECORD_KEY((byte) (1 << 2)),
     // RECORD_TIMESTAMP((byte) (1 << 3)
     RecordField(byte code) {
         this.code = code;
@@ -37,6 +37,9 @@ public enum RecordField {
         }
         if ((b & RecordField.RECORD_HEADER_VALUES.code) != 0) {
             result.add(RecordField.RECORD_HEADER_VALUES);
+        }
+        if ((b & RecordField.RECORD_KEY.code) != 0) {
+            result.add(RecordField.RECORD_KEY);
         }
         return result;
     }
