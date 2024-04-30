@@ -38,4 +38,8 @@ public record EncryptionScheme<K>(
         this(kekId, recordFields, AadNone.INSTANCE);
     }
 
+
+    public boolean targets(RecordField recordField) {
+        return recordFields.contains(recordField);
+    }
 }

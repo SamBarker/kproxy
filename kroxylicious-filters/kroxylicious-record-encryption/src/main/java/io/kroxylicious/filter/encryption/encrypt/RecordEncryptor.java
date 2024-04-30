@@ -85,7 +85,7 @@ public class RecordEncryptor<K, E> implements RecordTransform<Dek<E>.Encryptor> 
         if (this.batch == null) {
             throw new IllegalStateException();
         }
-        if (encryptionScheme.recordFields().contains(RecordField.RECORD_HEADER_VALUES)
+        if (encryptionScheme.targets(RecordField.RECORD_HEADER_VALUES)
                 && kafkaRecord.headers().length > 0
                 && !kafkaRecord.hasValue()) {
             // todo implement header encryption preserving null record-values

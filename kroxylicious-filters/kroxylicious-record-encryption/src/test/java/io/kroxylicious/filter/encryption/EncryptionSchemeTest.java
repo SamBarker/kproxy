@@ -9,10 +9,13 @@ package io.kroxylicious.filter.encryption;
 import java.util.EnumSet;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import io.kroxylicious.filter.encryption.config.RecordField;
 import io.kroxylicious.filter.encryption.encrypt.EncryptionScheme;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -37,4 +40,33 @@ class EncryptionSchemeTest {
         assertEquals(nonEmpty, es.recordFields());
     }
 
+    @ParameterizedTest
+    @EnumSource(RecordField.class)
+    void shouldReturnTrueForTargetedRecordField(RecordField targeted) {
+        // Given
+        Object kekId = new Object();
+        final EncryptionScheme<Object> encryptionScheme = new EncryptionScheme<>(kekId, EnumSet.allOf(RecordField.class));
+
+        // When
+        final boolean actual = encryptionScheme.targets(targeted);
+
+        // Then
+        assertThat(actual).isTrue();
+    }
+
+    @ParameterizedTest
+    @EnumSource(RecordField.class)
+    void shouldReturnFalseForNonTargetedRecordField(RecordField targeted) {
+        // Given
+        Object kekId = new Object();
+        final EnumSet<RecordField> supported = EnumSet.allOf(RecordField.class);
+        supported.remove(targeted);
+        final EncryptionScheme<Object> encryptionScheme = new EncryptionScheme<>(kekId, supported);
+
+        // When
+        final boolean actual = encryptionScheme.targets(targeted);
+
+        // Then
+        assertThat(actual).isFalse();
+    }
 }

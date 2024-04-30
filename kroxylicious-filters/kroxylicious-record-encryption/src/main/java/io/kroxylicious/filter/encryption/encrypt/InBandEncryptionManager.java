@@ -81,7 +81,7 @@ public class InBandEncryptionManager<K, E> implements EncryptionManager<K> {
                                                   @NonNull EncryptionScheme<K> encryptionScheme,
                                                   @NonNull MemoryRecords records,
                                                   @NonNull IntFunction<ByteBufferOutputStream> bufferAllocator) {
-        if (records.sizeInBytes() == 0) {
+        if (records.sizeInBytes() == 0) { //TODO this needs to check if the Encryption scheme supports Record Key but thats a violation of tell don't ask...
             // no records to transform, return input without modification
             return CompletableFuture.completedFuture(records);
         }
