@@ -135,7 +135,6 @@
             <property name="option" value="nospace" />
             <property name="allowLineBreaks" value="false" />
         </module-->
-
     </module>
 
     <!--

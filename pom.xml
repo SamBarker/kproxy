@@ -582,6 +582,9 @@
                         <logViolationCountToConsole>true</logViolationCountToConsole>
                         <logViolationsToConsole>true</logViolationsToConsole>
                         <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                        <propertyExpansion>
+                            project.basedir=${project.basedir}
+                        </propertyExpansion>
                     </configuration>
                     <executions>
                         <execution>
@@ -591,9 +594,6 @@
                                 <consoleOutput>true</consoleOutput>
                                 <failOnViolation>true</failOnViolation>
                                 <configLocation>etc/module-checkstyle.xml</configLocation>
-                                <propertyExpansion>
-                                    project.basedir=${project.basedir}
-                                </propertyExpansion>
                             </configuration>
                         </execution>
                     </executions>
